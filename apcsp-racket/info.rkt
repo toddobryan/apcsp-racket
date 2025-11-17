@@ -2,11 +2,11 @@
 (define collection 'multi)
 
 (define deps '("apcsp-racket-lib"
-               "apcsp-racket-doc"
+               ;"apcsp-racket-doc"
                "apcsp-racket-tool"))
 
 (define implies '("apcsp-racket-lib"
-                  "apcsp-racket-doc"
+                  ;"apcsp-racket-doc"
                   "apcsp-racket-tool"))
 
 
