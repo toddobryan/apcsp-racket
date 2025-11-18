@@ -4,10 +4,10 @@
 (require mzlib/pretty
 	 mzlib/struct)
 
-(require de/private/explicit-write)
+(require "explicit-write.rkt")
 
-(require deinprogramm/signature/signature-german
-	 (only-in deinprogramm/signature/signature
+(require "../../../apcsp-racket-signature/apcsp-racket/signature/signature-english.rkt"
+	 (only-in "../../../apcsp-racket-signature/apcsp-racket/signature/signature.rkt"
 		  signature? signature-name))
 
 ; I HATE DEFINE-STRUCT!

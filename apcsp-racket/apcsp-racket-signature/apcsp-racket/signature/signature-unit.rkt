@@ -9,9 +9,9 @@
 	 (for-syntax racket/base)
 	 (for-syntax stepper/private/syntax-property))
 
-(require apcsp-racket/signature/signature)
+(require "signature.rkt")
 
-(require apcsp-racket/quickcheck/quickcheck)
+(require "../quickcheck/quickcheck.rkt")
 
 (define-signature signature-messages^
   (recursive-signature-message

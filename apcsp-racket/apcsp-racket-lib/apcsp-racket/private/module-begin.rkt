@@ -2,8 +2,8 @@
 
 (provide beginner-module-begin intermediate-module-begin advanced-module-begin)
 
-(require apcsp-racket/signature/signature
-         apcsp-racket/signature/signature-syntax)
+(require "../../../apcsp-racket-signature/apcsp-racket/signature/signature.rkt"
+	 "../../../apcsp-racket-signature/apcsp-racket/signature/signature-syntax.rkt")
 
 (require (for-syntax racket/base)
 	 (for-syntax racket/list)
@@ -37,7 +37,7 @@
   ;; (even if void values are printed)
   (values))
   
-(define-syntaxes (beginner-module-begin vanilla-module-begin advanced-module-begin module-continue)
+(define-syntaxes (beginner-module-begin intermediate-module-begin advanced-module-begin module-continue)
   (let ()
     ;; takes a list of syntax objects (the result of syntax-e) and returns all the syntax objects that correspond to
     ;; a signature declaration. Syntax: (: id signature)

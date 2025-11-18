@@ -23,7 +23,7 @@
 	 (for-syntax scheme/base)
 	 (for-syntax stepper/private/syntax-property))
 
-(require apcsp/quickcheck/quickcheck)
+(require "../quickcheck/quickcheck.rkt")
 
 (define (signature=? c1 c2)
   (or (eq? c1 c2)

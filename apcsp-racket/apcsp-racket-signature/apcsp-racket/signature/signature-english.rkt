@@ -1,5 +1,5 @@
 #lang racket/base
-(require apcsp-racket/signature/signature-unit
+(require "signature-unit.rkt"
 	 racket/unit)
 
 (provide-signature-elements signatures^)
