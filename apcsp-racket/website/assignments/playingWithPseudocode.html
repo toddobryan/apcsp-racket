@@ -1,0 +1,42 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+<root><h2>Playing with Pseudocode</h2><p>I’ve created a way for you to practice with pseudocode.</p><p>Open DrRacket. It looks like <img src="drracket.png"/> in the bottom menu bar.</p><p>Once it’s open, type</p><p><code>#lang apcsp-pseudocode</code></p><p>on the top line of the top window and hit the Run button near the top-right of the window.</p><p>Now you can type in pseudocode and run it. (Make sure you leave the <code>#</code> line at the top, though.)</p><p>There are a couple of differences between real pseudocode and this.</p><ul><li><p>You can type the weird symbols in Pseudocode that aren’t on the keyboard by typing a backslash, an abbreviation, and then hitting <span class="screen">Alt + \</span> at the end. The abbreviations are:</p><ul><li><code>\geq</code> is ≥, but you can also write <code>&gt;=</code></li><li><code>\leq</code> is ≤, but you can also write <code>&lt;=</code></li><li><code>\neq</code> is ≠, but you can also write <code>/=</code></li><li><code>\leftarrow</code> is ←, but you can also write <code>&lt;-</code></li></ul></li><li>you can use <code>\n</code> in a string to jump to the next line. If your <code>DISPLAY</code> string ends in <code>\n</code>, there won’t be a space at the beginning of the next line.</li><li>you can comment a line (or part of a line) by putting <code>// </code> before the part you want to comment.</li></ul><p>Note: the pseudocode doesn’t care about blank lines, so you should probably put a line or two between each problem. You can put <code>DISPLAY("\n")</code> to skip a line in your code to separate the output. <code>DISPLAY("\n\n")</code> would skip two lines.</p><ol><li><p>Type the code below and see what it prints out.</p><pre>a &lt;- 17
+b &lt;- "xyz"
+DISPLAY(b)
+DISPLAY(a)</pre></li><li><p>Using a <code>REPEAT <i>n</i> TIMES</code> loop, print this:</p><pre>BEAT MALE
+BEAT MALE
+BEAT MALE
+BEAT MALE
+BEAT MALE
+BEAT MALE
+BEAT MALE</pre></li><li><p>Write a program that asks for someone’s name and age and prints out</p><pre>Hello, <em>&lt;their name&gt;</em>
+You're <em>&lt;their age&gt;</em> years old.</pre><p>So, your whole program should do something like</p><pre>What's your name? Taylor Swift
+How old are you? 35
+
+Hello, Taylor Swift
+You're 35 years old.</pre></li><li><p>Finish this procedure that takes a list parameter and prints each element of the list on a separate line.</p><pre>PROCEDURE printEach(myList)
+{
+  <em>&lt;your code here&gt;</em>
+}
+printEach(["a", 5, true])
+printEach([3, 2, 1, "blastoff"])</pre><p>should print</p><pre>a
+5
+true
+3
+2
+1
+blastoff</pre><p>once you’ve filled in your code.</p></li><li><p>Write one <code>REPEAT UNTIL(<em>condition</em>)</code> loop for each line below that prints:</p><ol type="a"><li><code>1 2 3 4 5</code></li><li><code>1 3 5 7 9 11 13 15 17 19 21</code></li><li><code>5 10 15 20</code></li><li><code>3 7 11 15 19 23</code></li><li><code>1 3 6 10 15</code><br/> (You’ll need two variables for this one.)</li><li><code>0 1 1 2 3 5 8 13 21 34 55 89</code><br/> (This is a challenge problem. You’ll need at least two variables for this one.)</li></ol></li><li><p>Finish this procedure. It should return the ticket price to a movie based on a person’s age: under 13 = $10, 13-54 = $15, 55 and over = $12</p><pre>PROCEDURE ticketPrice(age)
+{
+  <em>&lt;your code here, use RETURN&gt;</em>
+}
+DISPLAY(ticketPrice(10))
+DISPLAY(ticketPrice(16))
+DISPLAY(ticketPrice(72))</pre><p>should print</p><pre>10 15 12</pre><p>when you’ve filled in your code.</p></li></ol></root>
+</body>

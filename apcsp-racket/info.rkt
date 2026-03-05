@@ -1,15 +1,14 @@
 #lang info
 (define collection 'multi)
 
-(define deps '("apcsp-racket-lib"
-               "apcsp-racket-signature"
-               ;"apcsp-racket-doc"
-               "apcsp-racket-tool"))
+(define deps '("base"
+               "apcsp-lib"
+               "apcsp-doc"
+               "apcsp-test"))
 
-(define implies '("apcsp-racket-lib"
-                  "apcsp-racket-signature"
-                  ;"apcsp-racket-doc"
-                  "apcsp-racket-tool"))
+(define implies '("apcsp-lib"
+                  "apcsp-doc"
+                  "apcsp-test"))
 
 
 (define pkg-desc "Racket for AP Computer Science Principles")

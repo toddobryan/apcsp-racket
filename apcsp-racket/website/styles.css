@@ -1,0 +1,84 @@
+body {
+  font-family: Lora, sans-serif;
+  font-size: 14;
+  margin: 0; /* Removes default browser margin */
+  padding-left: 20%;
+  padding-right: 20%;
+  background-color: #dddddd; /* Light gray background */
+  color: #333; /* Dark gray text color */
+}
+
+pre, code {
+  font-family: "Google Sans Code", monospaced;
+  font-size: 14;
+  padding: 1px;
+  background-color: white;
+  color: black;
+}
+
+.math {
+  font-size: 15.400000000000002;
+  padding: 1px;
+  color: black;
+}
+
+/* Heading styles */
+h1, h2, h3 {
+  color: #0056b3; /* Blue heading color */
+  font-size: 28;
+  text-align: center; /* Centers the heading text */
+  margin-bottom: 20px; /* Space below the heading */
+}
+
+.section-header {
+  font-size: 21.0;
+  color: #0045a2;
+  text-align: left;
+  border-bottom: 1px solid black;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.subsection-header {
+  font-size: 17.5;
+  color: #0045a2;
+  text-align: left;
+  border-bottom: 1px solid black;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+p {
+  line-height: 1.6; /* Increases line spacing for readability */
+  margin-bottom: 10px; /* Space below paragraphs */
+}
+
+span.screen {
+  font-family: Robot, sans-serif;
+  font-size: 14;
+  background-color: white;
+  color: dark-gray;
+}
+
+/* Link styles */
+a {
+  color: #007bff; /* Blue link color */
+  text-decoration: none; /* Removes underline from links */
+}
+
+a:hover {
+  text-decoration: underline; /* Adds underline on hover */
+}
+
+/* Example of a class selector */
+.highlight {
+  background-color: yellow; /* Yellow background for highlighted text */
+  font-weight: bold; /* Makes highlighted text bold */
+}
+
+/* Example of an ID selector */
+#main-content {
+  border: 1px solid #ccc; /* Light gray border */
+  padding: 15px; /* Padding inside the content box */
+  background-color: #fff; /* White background for the main content */
+}
