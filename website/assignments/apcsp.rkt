@@ -2,6 +2,7 @@
 (require deinprogramm/signature/signature-syntax
          deinprogramm/signature/signature
          deinprogramm/signature/signature-english
+         mzlib/pconvert
          2htdp/image
          2htdp/universe
          lang/posn
@@ -10,15 +11,20 @@
 (print-boolean-long-form #f)
 (abbreviate-cons-as-list #f)
 
+
 (provide ε let Image Color
          Mode XPlace YPlace Angle PulledPoint
          SideCount StepCount Posn Pen PenStyle PenCap PenJoin
+         (rename-out [exact-rational? rational?]
+                     [exact-integer? integer?]
+                     [exact-nonnegative-integer? natural?])
          (all-from-out 2htdp/image 2htdp/universe))
+
 
 (define ε 0.000000000001)
 
-(define (natural? x)
-  (and (integer? x) (>= x 0)))
+(define (exact-rational? x)
+  (and (exact? x) (rational? x 0)))
 
 ; deinprogramm/sdp/image.rkt
 (define Image (signature Image (predicate image?)))

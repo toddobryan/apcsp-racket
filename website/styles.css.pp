@@ -1,6 +1,12 @@
+#lang pollen
+
+◊(define main-font-size 14)
+◊(define header-color "#0056b3")
+◊(define section-header-color "#0045a2")
+
 body {
   font-family: Lora, sans-serif;
-  font-size: 14;
+  font-size: ◊|main-font-size|;
   margin: 0; /* Removes default browser margin */
   padding-left: 20%;
   padding-right: 20%;
@@ -10,29 +16,36 @@ body {
 
 pre, code {
   font-family: "Google Sans Code", monospaced;
-  font-size: 14;
+  font-size: ◊main-font-size;
   padding: 1px;
   background-color: white;
   color: black;
 }
 
 .math {
-  font-size: 15.400000000000002;
+  font-size: ◊(* 1.1 ◊|main-font-size|);
   padding: 1px;
   color: black;
 }
 
 /* Heading styles */
-h1, h2, h3 {
-  color: #0056b3; /* Blue heading color */
-  font-size: 28;
+h1, h2{
+  color: ◊|header-color|; /* Blue heading color */
+  font-size: ◊(* 2 main-font-size);
   text-align: center; /* Centers the heading text */
   margin-bottom: 20px; /* Space below the heading */
 }
 
+h3 {
+  color: ◊|header-color|; /* Blue heading color */
+  font-size: ◊(* 1.5 main-font-size);
+  text-align: left; /* Centers the heading text */
+  margin-bottom: 10px; /* Space below the heading */
+}
+
 .section-header {
-  font-size: 21.0;
-  color: #0045a2;
+  font-size: ◊(* 1.5 main-font-size);
+  color: ◊|section-header-color|;
   text-align: left;
   border-bottom: 1px solid black;
   margin-top: 10px;
@@ -40,8 +53,8 @@ h1, h2, h3 {
 }
 
 .subsection-header {
-  font-size: 17.5;
-  color: #0045a2;
+  font-size: ◊(* 1.25 main-font-size);
+  color: ◊|section-header-color|;
   text-align: left;
   border-bottom: 1px solid black;
   margin-top: 8px;

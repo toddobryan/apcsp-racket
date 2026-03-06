@@ -22,7 +22,7 @@ the predicate that you can use to check if something is that kind
 of number.
 
 Note that every kind of number is also every type that's listed after it.
-In other words, a ◊code{Natural} is an ◊code{Integer}; a ◊code{Integer} is
+In other words, a ◊code{Natural} is an ◊code{Integer}; an ◊code{Integer} is
 a ◊code{Rational}; a ◊code{Rational} is a ◊code{Real}; and a ◊code{Real}
 is a ◊code{Number}.
 
@@ -88,9 +88,40 @@ To check if an expression would satisfy the ◊code{Rational} signature, use:
 #t
 }
 
+◊h3{Real}
+
+The signature ◊code{Real} is valid for any number that doesn't include an imaginary part. This includes all rational numbers, as well as irrational numbers like ◊math{\sqrt{2}} and ◊math{\pi}. If you've required ◊code{"apcsp.rkt"}, any inexact number is
+considered ◊code{Real}. To check if an expression would satisfy the ◊code{Real}
+signature, use:
+◊prog{
+(: real? (Any -> Boolean))
+; given a value, produces #t if it is a number that doesn't include an imaginary part
+> (real? 1/2)
+#t
+> (real? (sqrt 2))
+#t
+> (real? (sqrt -1))
+#f
+}
+
+◊h3{Number}
+The signature ◊code{Number} is valid for any number, including complex numbers. To check if an expression would satisfy the ◊code{Number} signature, use:
+◊prog{
+(: number? (Any -> Boolean))
+; given a value, produces #t if it is a number
+> (number? 1/2)
+#t
+> (number? (sqrt 2))
+#t
+> (number? (sqrt -1))
+#t
+> (number? "not a number")
+#f
+}
+
 ◊h2[#:id "#arithmetic"]{Arithmetic and Numbers}
 
-Remember that Racket uses ◊emph{parenthesized prefix notation}. Every
+Remember that Racket uses ◊em{parenthesized prefix notation}. Every
 mathematical operator goes after an open-parenthesis and its arguments
 follow the operator until you get to the closing parenthesis. Each argument
 could be its own expression.
