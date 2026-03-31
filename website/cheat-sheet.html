@@ -5,10 +5,56 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Lora" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="../styles.css">
+  <link rel="stylesheet" type="text/css" href="/website/styles.css">
 </head>
 <body>
-<root><h2>The Racket Cheat Sheet</h2><p>This should include everything you need to program your assignnments in Racket. Remember, I don’t need you to <strong>memorize</strong> the programming language, but understand how it works. If you need to look back at this page, that’s fine. Once you’ve used something enough times, you’ll have it memorized. And if you don’t use something enough to memorize it, don’t worry about it.</p><ol><li><a href="#numbers">Numbers</a></li><li><a href="#arithmetic">Arithmetic and Numbers</a></li><li><a href="#functions">Defining Functions</a></li></ol><h2 id="#numbers">Numbers</h2><p>Racket handles more kinds of numbers more easily than most programming languages. Each number type is explained with its signature, and the predicate that you can use to check if something is that kind of number.</p><p>Note that every kind of number is also every type that’s listed after it. In other words, a <code>Natural</code> is an <code>Integer</code>; an <code>Integer</code> is a <code>Rational</code>; a <code>Rational</code> is a <code>Real</code>; and a <code>Real</code> is a <code>Number</code>.</p><h3>Natural</h3><p>The signature <code>Natural</code> is valid for the numbers 0, 1, 2, ...</p><p>To test if an expression will satisfy the signature <code>Natural</code>, use:</p><pre>(: natural? (Any -&gt; Boolean))
+<root><h2>The Racket Cheat Sheet</h2><p>This should include everything you need to program your assignnments in Racket. Remember, I don’t need you to <strong>memorize</strong> the programming language, but understand how it works. If you need to look back at this page, that’s fine. Once you’ve used something enough times, you’ll have it memorized. And if you don’t use something enough to memorize it, don’t worry about it.</p><ol><li><a href="#booleans">Booleans and Logic</a></li><li><a href="#strings">Strings</a></li><li><a href="#numbers">Numbers</a></li><li><a href="#arithmetic">Arithmetic and Numbers</a></li><li><a href="#functions">Defining Functions</a></li></ol><h2 id="booleans">Booleans and Logic</h2><p>Racket has two <code>Boolean</code> values: <code>#t</code> (or <code>#true</code>) for true and <code>#f</code> (or <code>#false</code>) for false. Functions that return a Boolean value are called <strong>predicates</strong>, and their names usually end with a question mark. For example, the predicate <code>even?</code> takes a number and returns <code>#t</code> if it’s even and <code>#f</code> if it’s not.</p><p>There are three basic logical operators that you can use to combine Boolean values: <code>and</code>, <code>or</code>, and <code>not</code>. The signatures for these operators are:</p><pre>(: and (Boolean Boolean ... -&gt; Boolean))
+; given two or more Boolean values, produces #t if all of them are #t
+
+(: or (Boolean Boolean ... -&gt; Boolean))
+; given two or more Boolean values, produces #t if at least one of them is #t
+
+(: not (Boolean -&gt; Boolean))
+; given a Boolean value, produces the opposite (#t if it's #f, and #f if it's #t)</pre><p>There’s also a predicate to check if something is a Boolean value:</p><pre>(: boolean? (Any -&gt; Boolean))
+; given any value, produces #t if it's a Boolean value, #f otherwise</pre><h2 id="strings">Strings</h2><p>A <code>String</code> is a sequence of characters. You can create a string by putting characters between double quotes. For example, <code>"Hello, world!"</code> is a string. There are a few special characters that you can use in strings by writing a backslash followed by a character. For example, <code>"Line 1\nLine 2"</code> is a string that contains a newline character <code>\n</code>, which jumps to the next line.</p><p>Here are some of the most common string operations:</p><pre>(: string-length (String -&gt; Natural))
+; given a string, produces the number of characters in it
+&gt; (string-length "Hello")
+5
+
+(: string-append (String String ... -&gt; String))
+; given two or more strings, produces a new string that is the
+;result of concatenating them
+&gt; (string-append "Hello, " "world" "!")
+"Hello, world!"
+
+(: substring (String Natural Natural -&gt; String))
+; given a string and two natural numbers, produces a new string that is the
+; substring of the original string starting at the first number and ending
+; before the second number (the first letter is letter 0)
+&gt; (substring "Hello, world!" 0 5)
+"Hello"
+&gt; (substring "Hello, world!" 7 12)
+"world"
+
+(: string=? (String String -&gt; Boolean))
+; given two strings, produces #t if they are the same string, #f otherwise
+&gt; (string=? "Hello" "Hello")
+#t
+&gt; (string=? "Hello" "hello")
+#f
+
+(: string&lt;? (String String -&gt; Boolean))
+; given two strings, produces #t if the first is alphabetically less than the second, #f otherwise
+&gt; (string&lt;? "Apple" "Banana")
+#t
+
+(: string&lt;=? (String String -&gt; Boolean))
+(: string&gt;? (String String -&gt; Boolean))
+(: string&gt;=? (String String -&gt; Boolean))
+; given two strings, work the way you'd expect based on &lt;=, &gt;, and &gt;=
+
+(: string? (Any -&gt; Boolean))
+; given a value, produces #t if it is a string, #f otherwise</pre><h2 id="numbers">Numbers</h2><p>Racket handles more kinds of numbers more easily than most programming languages. Each number type is explained with its signature, and the predicate that you can use to check if something is that kind of number.</p><p>Note that every kind of number is also every type that’s listed after it. In other words, a <code>Natural</code> is an <code>Integer</code>; an <code>Integer</code> is a <code>Rational</code>; a <code>Rational</code> is a <code>Real</code>; and a <code>Real</code> is a <code>Number</code>.</p><h3>Natural</h3><p>The signature <code>Natural</code> is valid for the numbers 0, 1, 2, ...</p><p>To test if an expression will satisfy the signature <code>Natural</code>, use:</p><pre>(: natural? (Any -&gt; Boolean))
 ; given a value, produces #t if it's one of 0, 1, 2, ...
 &gt; (natural? 27)
 #t
@@ -46,17 +92,16 @@
 &gt; (number? (sqrt -1))
 #t
 &gt; (number? "not a number")
-#f</pre><h2 id="#arithmetic">Arithmetic and Numbers</h2><p>Remember that Racket uses <em>parenthesized prefix notation</em>. Every mathematical operator goes after an open-parenthesis and its arguments follow the operator until you get to the closing parenthesis. Each argument could be its own expression.</p><p>In the signatures below, <code>...</code> means “plus zero or more of the previous kind of argument”.</p><p>The signatures for the <strong>operators</strong> you should know are:</p><pre>(: + (Number Number ... -&gt; Number))
+#f</pre><h2 id="arithmetic">Arithmetic and Numbers</h2><p>Remember that Racket uses <em>parenthesized prefix notation</em>. Every mathematical operator goes after an open-parenthesis and its arguments follow the operator until you get to the closing parenthesis. Each argument could be its own expression.</p><p>In the signatures below, <code>...</code> means “plus zero or more of the previous kind of argument”.</p><p>The signatures for the <strong>operators</strong> you should know are:</p><pre>(: + (Number Number ... -&gt; Number))
 ; given two or more numbers, produces their sum
-(define (+ x1 x2 ...)
 &gt; (+ 2 3 -1)
 5
 
-(: - (Number ... -&gt; Number))
+(: - (Number -&gt; Number))
 ; given one number, multiplies it by -1
-(define (- x1 ...)
 &gt; (- 5)
 -5
+(: - (Number Number ... -&gt; Number))
 ; given two or more numbers, subtracts the second from the first,
 ; then substracts the third from that, and so on
 &gt; (- 8 4 2 1)
@@ -64,14 +109,12 @@
 
 (: * (Number Number ... -&gt; Number))
 ; given two or more numbers, multiplies them
-(define (* x1 x2 ...)
 &gt; (* 2 5 6 1/2)
 30
 
 (: / (Number Number ... -&gt; ))
 ; given two or more numbers, divides the first by the second,
 ; then divides that by the third, and so on
-(define (/ x1 x2 ...)
 &gt; (/ 60 5 3)
 4
 

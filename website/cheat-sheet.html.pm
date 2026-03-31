@@ -9,12 +9,87 @@ have it memorized. And if you don't use something enough to memorize it,
 don't worry about it.
 
 ◊ol{
+  ◊li{◊a[#:href "#booleans"]{Booleans and Logic}}
+  ◊li{◊a[#:href "#strings"]{Strings}}
   ◊li{◊a[#:href "#numbers"]{Numbers}}
   ◊li{◊a[#:href "#arithmetic"]{Arithmetic and Numbers}}
+  ◊li{◊a[#:href "#images"]{Images}}
   ◊li{◊a[#:href "#functions"]{Defining Functions}}
 }
 
-◊h2[#:id "#numbers"]{Numbers}
+◊h2[#:id "booleans"]{Booleans and Logic}
+
+Racket has two ◊code{Boolean} values: ◊code{#t} (or ◊code{#true}) for true and ◊code{#f} (or ◊code{#false}) for false. Functions that return a Boolean value are called ◊strong{predicates}, and their names usually end with a question mark. For example, the predicate ◊code{even?} takes a number and returns ◊code{#t} if it's even and ◊code{#f} if it's not.
+
+There are three basic logical operators that you can use to combine Boolean values: ◊code{and}, ◊code{or}, and ◊code{not}. The signatures for these operators are:
+
+◊prog{
+(: and (Boolean Boolean ... -> Boolean))
+; given two or more Boolean values, produces #t if all of them are #t
+
+(: or (Boolean Boolean ... -> Boolean))
+; given two or more Boolean values, produces #t if at least one of them is #t
+
+(: not (Boolean -> Boolean))
+; given a Boolean value, produces the opposite (#t if it's #f, and #f if it's #t)
+}
+
+There's also a predicate to check if something is a Boolean value:
+◊prog{
+(: boolean? (Any -> Boolean))
+; given any value, produces #t if it's a Boolean value, #f otherwise
+}
+
+
+◊h2[#:id "strings"]{Strings}
+
+A ◊code{String} is a sequence of characters. You can create a string by putting characters between double quotes. For example, ◊code{"Hello, world!"} is a string. There are a few special characters that you can use in strings by writing a backslash followed by a character. For example, ◊code{"Line 1\nLine 2"} is a string that contains a newline character ◊code{\n}, which jumps to the next line.
+
+Here are some of the most common string operations:
+
+◊prog{
+(: string-length (String -> Natural))
+; given a string, produces the number of characters in it
+> (string-length "Hello")
+5 
+
+(: string-append (String String ... -> String))
+; given two or more strings, produces a new string that is the
+;result of concatenating them
+> (string-append "Hello, " "world" "!")
+"Hello, world!" 
+
+(: substring (String Natural Natural -> String))
+; given a string and two natural numbers, produces a new string that is the
+; substring of the original string starting at the first number and ending
+; before the second number (the first letter is letter 0)
+> (substring "Hello, world!" 0 5)
+"Hello"
+> (substring "Hello, world!" 7 12)
+"world"
+
+(: string=? (String String -> Boolean))
+; given two strings, produces #t if they are the same string, #f otherwise
+> (string=? "Hello" "Hello")
+#t
+> (string=? "Hello" "hello")
+#f
+
+(: string<? (String String -> Boolean))
+; given two strings, produces #t if the first is alphabetically less than the second, #f otherwise
+> (string<? "Apple" "Banana")
+#t
+
+(: string<=? (String String -> Boolean))
+(: string>? (String String -> Boolean))
+(: string>=? (String String -> Boolean))
+; given two strings, work the way you'd expect based on <=, >, and >=
+
+(: string? (Any -> Boolean))
+; given a value, produces #t if it is a string, #f otherwise
+}
+
+◊h2[#:id "numbers"]{Numbers}
 
 Racket handles more kinds of numbers more easily than most programming
 languages. Each number type is explained with its signature, and 
@@ -119,7 +194,7 @@ The signature ◊code{Number} is valid for any number, including complex numbers
 #f
 }
 
-◊h2[#:id "#arithmetic"]{Arithmetic and Numbers}
+◊h2[#:id "arithmetic"]{Arithmetic and Numbers}
 
 Remember that Racket uses ◊em{parenthesized prefix notation}. Every
 mathematical operator goes after an open-parenthesis and its arguments
@@ -134,15 +209,14 @@ The signatures for the ◊strong{operators} you should know are:
 ◊prog{
 (: + (Number Number ... -> Number))
 ; given two or more numbers, produces their sum
-(define (+ x1 x2 ...)
 > (+ 2 3 -1)
 5
 
-(: - (Number ... -> Number))
+(: - (Number -> Number))
 ; given one number, multiplies it by -1
-(define (- x1 ...)
 > (- 5)
 -5
+(: - (Number Number ... -> Number))
 ; given two or more numbers, subtracts the second from the first,
 ; then substracts the third from that, and so on
 > (- 8 4 2 1)
@@ -150,14 +224,12 @@ The signatures for the ◊strong{operators} you should know are:
 
 (: * (Number Number ... -> Number))
 ; given two or more numbers, multiplies them
-(define (* x1 x2 ...)
 > (* 2 5 6 1/2)
 30
 
 (: / (Number Number ... -> ))
 ; given two or more numbers, divides the first by the second,
 ; then divides that by the third, and so on
-(define (/ x1 x2 ...)
 > (/ 60 5 3)
 4
 
@@ -211,3 +283,7 @@ The signatures for the ◊strong{relations} you should know are:
 > (< 3 2 2)
 #t
 }
+
+◊h2[#:id "images"]{Images}
+
+

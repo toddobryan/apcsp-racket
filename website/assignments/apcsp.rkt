@@ -9,15 +9,19 @@
          rackunit)
 
 (print-boolean-long-form #f)
-(abbreviate-cons-as-list #f)
+(abbreviate-cons-as-list #t)
 
 
-(provide ε let Image Color
+(provide ε let
+         sin-deg cos-deg tan-deg
+         Image Color
          Mode XPlace YPlace Angle PulledPoint
          SideCount StepCount Posn Pen PenStyle PenCap PenJoin
+         MouseEvent PadEvent KeyEvent
          (rename-out [exact-rational? rational?]
                      [exact-integer? integer?]
                      [exact-nonnegative-integer? natural?])
+         read eof-object?
          (all-from-out 2htdp/image 2htdp/universe))
 
 
@@ -25,6 +29,15 @@
 
 (define (exact-rational? x)
   (and (exact? x) (rational? x 0)))
+
+(define (sin-deg degrees)
+  (sin (degrees->radians degrees)))
+
+(define (cos-deg degrees)
+  (cos (degrees->radians degrees)))
+
+(define (tan-deg degrees)
+  (tan (degrees->radians degrees)))
 
 ; deinprogramm/sdp/image.rkt
 (define Image (signature Image (predicate image?)))
@@ -43,8 +56,10 @@
 (define PenJoin (signature PenJoin (predicate pen-join?)))
 ; deinprogramm/sdp/universe.rkt
 (define MouseEvent
-    (signature MouseEvent
-      (enum "button-down" "button-up" "drag" "move" "enter" "leave")))
-  (define PadEvent
-    (signature PadEvent
-      (enum "left" "right" "up" "down" "w" "s" "a" "d" " " "shift" "rshift")))
+  (signature MouseEvent
+             (enum "button-down" "button-up" "drag" "move" "enter" "leave")))
+(define PadEvent
+  (signature PadEvent
+             (enum "left" "right" "up" "down" "w" "s" "a" "d" " " "shift" "rshift")))
+
+(define KeyEvent (signature KeyEvent (predicate key-event?)))
