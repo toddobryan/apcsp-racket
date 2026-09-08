@@ -4,16 +4,15 @@
 (provide (rename-out [ps-module-begin #%module-begin])
          (matching-identifiers-out #rx"^ps-" (all-defined-out)))
 
-(struct Env (parent directory))
-
-(define (get id environ)
-  (if (not (in-hash-keys id))
-)
+; Environment machinery, started but not finished. The expander currently
+; treats pseudocode variables as ordinary Racket bindings (see ps-assignment
+; below), so nothing needs an Env yet.
+; (struct Env (parent directory))
+; (define (get id environ) ...)
 
 
 (define-macro (ps-module-begin (ps-program STMT ...))
     #'(#%module-begin
-       (define env (Env 'none (make-hash)))
        STMT ...
        ))
 
@@ -29,7 +28,7 @@
 ;      #:key syntax->datum)))
 
 (define-macro-cases ps-assignment
-  [(ps-assignment (ps-list-ref ID NUM) EXPR) #'(gvector-set! (get ID env) (sub1 NUM) EXPR)]
+  [(ps-assignment (ps-list-ref ID NUM) EXPR) #'(gvector-set! ID (sub1 NUM) EXPR)]
   [(ps-assignment ID EXPR) #'(let ([expr-once EXPR])
                                (if (gvector? expr-once)
                                  (set! ID (vector->gvector (vector-copy (gvector->vector expr-once))))
