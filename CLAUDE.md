@@ -15,7 +15,7 @@ teaching languages. The goal is a package students install with `raco`.
   *this* repo is a **superseded copy**; do not edit it. Website changes belong in
   `dupontmanual-org`.
 - **`toddobryan/apcsp`** (`~/code/racket/apcsp`) — **archived**, do not commit there.
-  It is still needed as a source of files: see "Missing files" below.
+  It is still needed as a source of files: see "Current state" below.
 
 ## Commands
 
@@ -23,6 +23,15 @@ Racket is installed system-wide (`/usr/share/racket`, Racket 9.1). Packages that
 be shared across users are installed at installation scope with `sudo raco pkg install -i`.
 In-development packages in this repo are linked at **user** scope, since a linked
 package points into a home directory.
+
+On a fresh machine, the pseudocode language needs these first — without them
+`main.rkt` fails to compile on `br/quicklang/lang/reader`:
+
+```bash
+sudo raco pkg install -i --auto beautiful-racket-lib brag-lib
+```
+
+Then:
 
 ```bash
 # Link a package for development (from the repo root)
