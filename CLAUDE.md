@@ -11,11 +11,16 @@ teaching languages. The goal is a package students install with `raco`.
 ### Related repositories
 
 - **`toddobryan/dupontmanual-org`** (`~/code/racket/dupontmanual-org`) — the live class
-  website, a Pollen project deployed to dupontmanual.org. The `website/` directory in
-  *this* repo is a **superseded copy**; do not edit it. Website changes belong in
-  `dupontmanual-org`.
+  website, a Pollen project deployed to dupontmanual.org. The APCSP pages live under its
+  `apcsp/` directory. This repo no longer contains any website sources: the former
+  `website/` directory was removed once its content was confirmed present there. All
+  website changes belong in `dupontmanual-org`.
 - **`toddobryan/apcsp`** (`~/code/racket/apcsp`) — **archived**, do not commit there.
-  It is still needed as a source of files: see "Current state" below.
+  Everything unique to it has now been copied here (`apcsp-lib/signature/`,
+  `apcsp-lib/apcsp/record.rkt`, `apcsp-test/`, `reference/`, and
+  `apcsp-racket/private/primitives.rkt`). Its `website/` and `apcsp-lib/pseudocode/`
+  are older copies of what lives here and in `dupontmanual-org`. Once the signature
+  question below is settled it can be deleted outright.
 
 ## Commands
 
@@ -91,6 +96,44 @@ These reference each other by **relative path** across package boundaries, e.g.
 the main structural problem to fix when restructuring — packages should refer to each
 other by collection name.
 
+### `apcsp-lib/signature/` — de-unitized signature rewrite (**not yet chosen**)
+
+A second, competing implementation of the signature system, ported from the archived
+`apcsp` repo. Where `apcsp-racket-signature/` is near-verbatim upstream DeinProgramm
+(`#lang scheme/base`, unit-based: `signatures^`, `signatures@`), this one is a rewrite
+to `#lang racket/base` with direct provides — roughly 1100 lines of divergence in
+`signature-unit.rkt` alone.
+
+Neither is a superset. This tree lacks `tool.rkt` (the DrRacket plugin) and the
+`drracket-tools` registration; the unit-based tree lacks the rewrite. `record.rkt` and
+`apcsp-test/` depend on **this** tree, not the unit-based one.
+
+**Open decision:** adopt this rewrite and port `tool.rkt` onto it, or keep the
+unit-based tree and discard this. Until then both are present on purpose.
+
+### `apcsp-lib/apcsp/record.rkt` — `define-record`
+
+Ported from the archived repo; provides `define-record`. Depends on
+`apcsp-lib/signature/`, so it stands or falls with the decision above.
+
+### `apcsp-test/` — signature test suite
+
+Ported from the archived repo (644 lines, substantially diverged from upstream
+`deinprogramm-test`). Run with:
+
+```bash
+racket -e '(require "apcsp-test/signature.rkt" rackunit/text-ui) (run-tests all-signature-tests)'
+```
+
+Currently **28 pass, 1 error**: the `mixed wrap` case under "Tests for signature
+syntax" fails with `got #<procedure:procedure-to-blame>`, a real defect in the
+rewrite's lazy-wrap blame handling. That is part of the open decision above.
+
+### `reference/` — pedagogical sources
+
+*Schreibe Dein Programm!* plus its machine translation (21 MB of PDFs). Not a package
+and not shipped; see `reference/README.md`.
+
 ### `apcsp-lib/quiz/` — self-check exercises
 
 `questions.rkt` only, ~20 lines, an unfinished sketch that does not compile
@@ -114,13 +157,16 @@ problem, and choosing between them is an open design decision:
    worked as written.
 
 **The HTDP languages do not compile.** `raco make apcsp-lib/apcsp/apcsp-racket/beginner.rkt`
-fails: the `apcsp-racket` collection is not linked, and two referenced modules are
-absent from this repo entirely:
+still fails, now for two remaining reasons:
 
-- `apcsp-racket/private/primitives.rkt` — exists **only** in the archived `apcsp` repo
-  at `apcsp-lib/apcsp/private/primitives.rkt`
+- The `apcsp-racket` collection is not linked, so every `apcsp-racket/private/...`
+  require fails to resolve. This is the first thing to fix.
 - `apcsp-racket/private/stepper-button.rkt` — referenced by `lang/reader.rkt`, not
-  found in either repo
+  found in any repo, including the archived one. It has to be written or the reference
+  dropped.
+
+`apcsp-racket/private/primitives.rkt` used to be missing too; it has been copied in
+from the archived repo and is no longer a blocker.
 
 **Empty leftover directories.** `apcsp-racket/` (nested inside itself) and
 `apcsp-racket-doc/` contain no tracked files and only ever held compiled artifacts.
