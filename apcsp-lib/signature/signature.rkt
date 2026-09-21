@@ -137,7 +137,7 @@
     (syntax-case stx ()
       [(_ ?cnt-exp ?val-exp)
        (syntax-case (local-expand #'?val-exp 'expression #f) (lambda #%plain-lambda)
-         [(λ ?params ?body0 ?body1 ...)
+         [(lambda ?params ?body0 ?body1 ...)
           (stepper-syntax-property
            ; sanitize the expression as DrRackets binding arrows get confused otherwise
            (with-syntax ((?srcloc (syntax->srcloc-code #'?val-exp)))

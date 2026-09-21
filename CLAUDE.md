@@ -15,12 +15,11 @@ teaching languages. The goal is a package students install with `raco`.
   `apcsp/` directory. This repo no longer contains any website sources: the former
   `website/` directory was removed once its content was confirmed present there. All
   website changes belong in `dupontmanual-org`.
-- **`toddobryan/apcsp`** (`~/code/racket/apcsp`) — **archived**, do not commit there.
-  Everything unique to it has now been copied here (`apcsp-lib/signature/`,
-  `apcsp-lib/apcsp/record.rkt`, `apcsp-test/`, `reference/`, and
-  `apcsp-racket/private/primitives.rkt`). Its `website/` and `apcsp-lib/pseudocode/`
-  are older copies of what lives here and in `dupontmanual-org`. Once the signature
-  question below is settled it can be deleted outright.
+- **`toddobryan/apcsp`** — **deleted.** Everything unique to it was copied here first
+  (`apcsp-lib/signature/`, `apcsp-lib/apcsp/record.rkt`, `apcsp-test/`, `reference/`,
+  and `apcsp-racket/private/primitives.rkt`); its `website/` and
+  `apcsp-lib/pseudocode/` were older copies of what lives here and in
+  `dupontmanual-org`. Nothing references it any more.
 
 ## Commands
 
@@ -98,8 +97,8 @@ other by collection name.
 
 ### `apcsp-lib/signature/` — de-unitized signature rewrite (**not yet chosen**)
 
-A second, competing implementation of the signature system, ported from the archived
-`apcsp` repo. Where `apcsp-racket-signature/` is near-verbatim upstream DeinProgramm
+A second, competing implementation of the signature system, ported from the
+now-deleted `apcsp` repo. Where `apcsp-racket-signature/` is near-verbatim upstream DeinProgramm
 (`#lang scheme/base`, unit-based: `signatures^`, `signatures@`), this one is a rewrite
 to `#lang racket/base` with direct provides — roughly 1100 lines of divergence in
 `signature-unit.rkt` alone.
@@ -108,26 +107,27 @@ Neither is a superset. This tree lacks `tool.rkt` (the DrRacket plugin) and the
 `drracket-tools` registration; the unit-based tree lacks the rewrite. `record.rkt` and
 `apcsp-test/` depend on **this** tree, not the unit-based one.
 
+The rewrite now passes its full test suite, so it is a working implementation rather
+than a half-finished one.
+
 **Open decision:** adopt this rewrite and port `tool.rkt` onto it, or keep the
 unit-based tree and discard this. Until then both are present on purpose.
 
 ### `apcsp-lib/apcsp/record.rkt` — `define-record`
 
-Ported from the archived repo; provides `define-record`. Depends on
+Ported from the now-deleted `apcsp` repo; provides `define-record`. Depends on
 `apcsp-lib/signature/`, so it stands or falls with the decision above.
 
 ### `apcsp-test/` — signature test suite
 
-Ported from the archived repo (644 lines, substantially diverged from upstream
-`deinprogramm-test`). Run with:
+Ported from the now-deleted `apcsp` repo (644 lines, substantially diverged from
+upstream `deinprogramm-test`). Run with:
 
 ```bash
 racket -e '(require "apcsp-test/signature.rkt" rackunit/text-ui) (run-tests all-signature-tests)'
 ```
 
-Currently **28 pass, 1 error**: the `mixed wrap` case under "Tests for signature
-syntax" fails with `got #<procedure:procedure-to-blame>`, a real defect in the
-rewrite's lazy-wrap blame handling. That is part of the open decision above.
+**All 29 pass.** They cover `apcsp-lib/signature/`, not `apcsp-racket-signature/`.
 
 ### `reference/` — pedagogical sources
 
@@ -162,11 +162,11 @@ still fails, now for two remaining reasons:
 - The `apcsp-racket` collection is not linked, so every `apcsp-racket/private/...`
   require fails to resolve. This is the first thing to fix.
 - `apcsp-racket/private/stepper-button.rkt` — referenced by `lang/reader.rkt`, not
-  found in any repo, including the archived one. It has to be written or the reference
-  dropped.
+  found anywhere, including in the `apcsp` repo before it was deleted. It has to be
+  written or the reference dropped.
 
 `apcsp-racket/private/primitives.rkt` used to be missing too; it has been copied in
-from the archived repo and is no longer a blocker.
+from the `apcsp` repo and is no longer a blocker.
 
 **Empty leftover directories.** `apcsp-racket/` (nested inside itself) and
 `apcsp-racket-doc/` contain no tracked files and only ever held compiled artifacts.
@@ -199,7 +199,7 @@ raco pkg install "git://github.com/toddobryan/apcsp-racket?path=apcsp"
 
 ## Reference material
 
-`apcsp-doc/` in the archived `apcsp` repo holds *Schreibe Dein Programm!* by Sperber
-and Klaeren (CC BY-SA 4.0) plus a machine translation. It is the pedagogical source
-for the signature system here, and uses the same `(: name (Arg -> Result))` notation
-the signature code implements.
+`reference/` holds *Schreibe Dein Programm!* by Sperber and Klaeren (CC BY-SA 4.0)
+plus a machine translation. It is the pedagogical source for the signature system
+here, and uses the same `(: name (Arg -> Result))` notation the signature code
+implements.
