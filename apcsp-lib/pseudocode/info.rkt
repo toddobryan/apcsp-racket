@@ -1,5 +1,5 @@
 #lang info
-(define collection "apcsp-pseudocode")
+(define collection "pseudocode")
 (define version "0.2")
 (define scribblings '(("scribblings/apcsp-pseudocode.scrbl")))
 (define deps '("base"

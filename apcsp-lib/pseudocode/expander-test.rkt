@@ -1,4 +1,4 @@
-#lang apcsp-pseudocode
+#lang pseudocode
 
 myList ← ["a", "b", "c"]
 DISPLAY(myList[2])

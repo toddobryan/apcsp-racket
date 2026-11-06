@@ -3,7 +3,7 @@
 @title{AP Computer Science Principles Pseudocode}
 @author{Todd O'Bryan}
 
-@defmodulelang[apcsp-pseudocode]
+@defmodulelang[pseudocode]
 
 This is an implementation of the AP CSP Pseudocode that students can used to experiment.
 
