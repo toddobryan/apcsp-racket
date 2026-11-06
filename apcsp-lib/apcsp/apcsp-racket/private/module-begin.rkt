@@ -2,8 +2,8 @@
 
 (provide beginner-module-begin intermediate-module-begin advanced-module-begin)
 
-(require "../../../apcsp-racket-signature/apcsp-racket/signature/signature.rkt"
-	 "../../../apcsp-racket-signature/apcsp-racket/signature/signature-syntax.rkt")
+(require "../../apcsp-racket-signature/apcsp-racket/signature/signature.rkt"
+	 "../../apcsp-racket-signature/apcsp-racket/signature/signature-syntax.rkt")
 
 (require (for-syntax racket/base)
 	 (for-syntax racket/list)

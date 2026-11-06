@@ -6,8 +6,8 @@
 
 (require "explicit-write.rkt")
 
-(require "../../../apcsp-racket-signature/apcsp-racket/signature/signature-english.rkt"
-	 (only-in "../../../apcsp-racket-signature/apcsp-racket/signature/signature.rkt"
+(require "../../apcsp-racket-signature/apcsp-racket/signature/signature-english.rkt"
+	 (only-in "../../apcsp-racket-signature/apcsp-racket/signature/signature.rkt"
 		  signature? signature-name))
 
 ; I HATE DEFINE-STRUCT!

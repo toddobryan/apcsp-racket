@@ -23,7 +23,7 @@ teaching languages. The goal is a package students install with `raco`.
 
 ## Commands
 
-Racket is installed system-wide (`/usr/share/racket`, Racket 9.1). Packages that must
+Racket is installed system-wide (`/usr/share/racket`, Racket 9.3). Packages that must
 be shared across users are installed at installation scope with `sudo raco pkg install -i`.
 In-development packages in this repo are linked at **user** scope, since a linked
 package points into a home directory.
@@ -39,7 +39,7 @@ Then:
 
 ```bash
 # Link a package for development (from the repo root)
-raco pkg install --link --name apcsp-pseudocode --auto apcsp-lib/pseudocode
+raco pkg install --link --name pseudocode --auto apcsp-lib/pseudocode
 
 # Build one module (fastest feedback loop)
 raco make apcsp-lib/pseudocode/main.rkt
@@ -49,11 +49,11 @@ raco test apcsp-lib/pseudocode/lexer-test.rkt        # a single test file
 raco test apcsp-lib/pseudocode/*-test.rkt            # all pseudocode tests
 ```
 
-Test files must be able to resolve the `apcsp-pseudocode` collection, so the package
+Test files must be able to resolve the `pseudocode` collection, so the package
 has to be linked before `parser-test.rkt` will run at all.
 
 `expander-test.rkt` is **not** a unit test — it is a sample program written in
-`#lang apcsp-pseudocode`. Run it with `racket expander-test.rkt` to exercise the
+`#lang pseudocode`. Run it with `racket expander-test.rkt` to exercise the
 language end to end.
 
 ## Architecture
@@ -62,15 +62,17 @@ Three separate bodies of work live under `apcsp-lib/`:
 
 ### `apcsp-lib/pseudocode/` — the APCSP pseudocode `#lang`
 
-A Beautiful Racket / brag DSL. Collection name is **`apcsp-pseudocode`** (not
-`pseudocode`), declared in its `info.rkt`. The pipeline:
+A Beautiful Racket / brag DSL. The collection and the package are both named
+**`pseudocode`**; the collection name is declared in its `info.rkt`. A linked
+package records that name in `links.rktd` at install time, so changing it in
+`info.rkt` means removing and re-linking the package. The pipeline:
 
 ```
 lexer.rkt → tokenizer.rkt → parser.rkt (brag grammar) → expander.rkt
 ```
 
 `main.rkt` is the language entry point: its `read-syntax` parses the source and wraps
-the parse tree in a module whose language is `apcsp-pseudocode/expander`. Its `reader`
+the parse tree in a module whose language is `pseudocode/expander`. Its `reader`
 submodule supplies DrRacket integration — `colorer.rkt` for syntax highlighting and
 `indenter.rkt` for indentation.
 
@@ -91,7 +93,7 @@ Two nested packages with their own `info.rkt` files:
   `drracket-tools` in its `info.rkt`.
 
 These reference each other by **relative path** across package boundaries, e.g.
-`private/module-begin.rkt` requires `"../../../apcsp-racket-signature/..."`. That is
+`private/module-begin.rkt` requires `"../../apcsp-racket-signature/..."`. That is
 the main structural problem to fix when restructuring — packages should refer to each
 other by collection name.
 
