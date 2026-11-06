@@ -4,28 +4,38 @@
 (provide (rename-out [ps-module-begin #%module-begin])
          (matching-identifiers-out #rx"^ps-" (all-defined-out)))
 
-; Environment machinery, started but not finished. The expander currently
-; treats pseudocode variables as ordinary Racket bindings (see ps-assignment
-; below), so nothing needs an Env yet.
-; (struct Env (parent directory))
-; (define (get id environ) ...)
+; Pseudocode variables are ordinary module-level Racket bindings. Assignment
+; expands to set!, which needs an existing binding, so ps-module-begin defines
+; every variable the program assigns to. A variable first assigned inside a
+; procedure is therefore global.
+(begin-for-syntax
+  (require racket/list)
 
+  ; The identifier right after each HEAD node in stx, at any depth. Assignments
+  ; to list elements have a ps-list-ref there instead, so they are skipped.
+  (define (ids-after head stx)
+    (define parts (or (syntax->list stx) '()))
+    (append
+     (if (and (pair? parts) (pair? (cdr parts))
+              (identifier? (car parts)) (eq? (syntax-e (car parts)) head)
+              (identifier? (cadr parts)))
+         (list (cadr parts))
+         '())
+     (append-map (lambda (part) (ids-after head part)) parts)))
+
+  ; Procedure names are excluded because ps-proc-def defines those itself.
+  (define (variables-to-define stmts)
+    (define proc-names (map syntax-e (ids-after 'ps-proc-def stmts)))
+    (remove-duplicates
+     (filter (lambda (id) (not (memq (syntax-e id) proc-names)))
+             (ids-after 'ps-assignment stmts))
+     #:key syntax-e)))
 
 (define-macro (ps-module-begin (ps-program STMT ...))
+  (with-syntax ([(VAR ...) (variables-to-define #'(STMT ...))])
     #'(#%module-begin
-       STMT ...
-       ))
-
-; ; TODO: this grabs all ids, including parameters. Need to avoid those.
-; ; Also, would be nice to scope free variables to procedures.
-; (begin-for-syntax
-;   (require racket/list)
-;   (define (find-unique-ids stmts)
-;     (remove-duplicates
-;      (for/list ([stx (in-list (stx-flatten stmts))]
-;                 #:when (syntax-property stx 'ps-id))
-;        stx)
-;      #:key syntax->datum)))
+       (define VAR (void)) ...
+       STMT ...)))
 
 (define-macro-cases ps-assignment
   [(ps-assignment (ps-list-ref ID NUM) EXPR) #'(gvector-set! ID (sub1 NUM) EXPR)]
