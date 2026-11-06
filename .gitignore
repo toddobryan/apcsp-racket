@@ -10,3 +10,6 @@ compiled/
 
 # Dependency tracking files
 *.dep
+
+# Scribble build output
+doc/

@@ -4,7 +4,7 @@
 (define (read-syntax path port)
   (define parse-tree (parse path (make-tokenizer port path)))
   (strip-bindings
-   #`(module parser-mod pseudocode/parse-only
+   #`(module parser-mod apcsp/pseudocode/parse-only
        #,parse-tree)))
 (module+ reader (provide read-syntax))
 

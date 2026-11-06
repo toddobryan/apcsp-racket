@@ -4,7 +4,7 @@
 (define (read-syntax path port)
   (define tokens (apply-tokenizer make-tokenizer port))
   (strip-bindings
-   #`(module ps-tokens-mod pseudocode/tokenize-only
+   #`(module ps-tokens-mod apcsp/pseudocode/tokenize-only
        #,@tokens)))
 (module+ reader (provide read-syntax))
 

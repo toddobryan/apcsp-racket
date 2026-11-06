@@ -1,6 +1,6 @@
 #lang br
-(require pseudocode/parser
-         pseudocode/tokenizer
+(require apcsp/pseudocode/parser
+         apcsp/pseudocode/tokenizer
          brag/support
          rackunit)
 
