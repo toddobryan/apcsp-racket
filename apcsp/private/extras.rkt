@@ -12,7 +12,7 @@
 (abbreviate-cons-as-list #t)
 
 
-(provide ε let
+(provide ε
          sin-deg cos-deg tan-deg
          Image Color
          Mode XPlace YPlace Angle PulledPoint

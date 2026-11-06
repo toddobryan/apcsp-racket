@@ -58,10 +58,9 @@ plain `racket`.
 One package, one collection, both named **`apcsp`**. This is what ships.
 
 - `bsl.rkt` + `bsl/lang/reader.rkt` — `#lang apcsp/bsl`: `htdp/bsl` plus
-  `private/extras.rkt`. To add a level (`bsl+`, `isl`, ...), copy this pair using the
+  `private/extras.rkt`, and `local` from ISL (BSL's `define` already works inside it). To add a level (`bsl+`, `isl`, ...), copy this pair using the
   matching `lang/htdp-*` module and the options in `htdp/<level>/lang/reader.rkt`. Names
-  clashing with `extras.rkt` differ per level; from `isl` up the level's own `let` must
-  win over the extras' `let`.
+  clashing with `extras.rkt` differ per level.
 - `private/extras.rkt` — what `htdp/bsl` lacks: image and event signatures, `ε`,
   degree-based trig, and exact number predicates. It began as `apcsp.rkt` on the class
   site, which students used to download and `require`.
