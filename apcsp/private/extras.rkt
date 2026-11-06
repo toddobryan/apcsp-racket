@@ -28,7 +28,7 @@
 (define ε 0.000000000001)
 
 (define (exact-rational? x)
-  (and (exact? x) (rational? x 0)))
+  (and (rational? x) (exact? x)))
 
 (define (sin-deg degrees)
   (sin (degrees->radians degrees)))
