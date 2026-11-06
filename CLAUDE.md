@@ -62,9 +62,9 @@ One package, one collection, both named **`apcsp`**. This is what ships.
   matching `lang/htdp-*` module and the options in `htdp/<level>/lang/reader.rkt`. Names
   clashing with `extras.rkt` differ per level; from `isl` up the level's own `let` must
   win over the extras' `let`.
-- `private/extras.rkt` — a copy of `apcsp.rkt` from `dupontmanual-org`
-  (`apcsp/assignments/apcsp.rkt`), which stays on the site as well: image and event
-  signatures, `ε`, degree-based trig, and exact number predicates.
+- `private/extras.rkt` — what `htdp/bsl` lacks: image and event signatures, `ε`,
+  degree-based trig, and exact number predicates. It began as `apcsp.rkt` on the class
+  site, which students used to download and `require`.
 - `pseudocode/` — `#lang apcsp/pseudocode`, described below.
 
 A two-part `#lang` name needs a `lang/reader.rkt`; it never finds `main.rkt`'s `reader`
@@ -87,9 +87,13 @@ indentation. `lang/reader.rkt` re-exports that submodule.
 `parse-only.rkt` and `tokenize-only.rkt` are debugging entry points that stop the
 pipeline early; use them to inspect tokens or the parse tree in isolation.
 
-Variables are ordinary module-level Racket bindings. `ps-module-begin` scans the parse
-tree for assignment targets and defines each one, so a variable first assigned inside a
-procedure is global, and one read before its assignment runs holds `(void)`.
+Variables live in a chain of `Env` structs, not in Racket bindings. The language exports
+almost no names, so a variable read is an unbound identifier and reaches `ps-top`, the
+language's `#%top`, which looks it up at run time. Assignment updates the nearest existing
+variable, or creates one in the current environment. Only procedures create environments:
+a call gets a new one whose parent is where the procedure was defined. Blocks do not, so
+a `FOR EACH` variable outlives its loop. The AP exam reference sheet says nothing about
+scope, so these are this language's choices rather than College Board rules.
 
 ### Outside the package
 
@@ -109,7 +113,6 @@ These are not installed. `apcsp-lib/` no longer holds anything that ships.
   racket -e '(require "apcsp-test/signature.rkt" rackunit/text-ui) (run-tests all-signature-tests)'
   ```
 
-- `apcsp-lib/quiz/` — self-check exercises, an unfinished sketch.
 - `reference/` — *Schreibe Dein Programm!* plus its machine translation (21 MB of PDFs);
   see `reference/README.md`.
 

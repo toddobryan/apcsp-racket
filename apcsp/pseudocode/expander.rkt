@@ -1,48 +1,62 @@
-#lang br/quicklang
+#lang br
 (require data/gvector)
 
-(provide (rename-out [ps-module-begin #%module-begin])
+(provide #%app #%datum #%top-interaction
+         (rename-out [ps-module-begin #%module-begin]
+                     [ps-top #%top])
          (matching-identifiers-out #rx"^ps-" (all-defined-out)))
 
-; Pseudocode variables are ordinary module-level Racket bindings. Assignment
-; expands to set!, which needs an existing binding, so ps-module-begin defines
-; every variable the program assigns to. A variable first assigned inside a
-; procedure is therefore global.
-(begin-for-syntax
-  (require racket/list)
+; Variables live in a chain of environments rather than in Racket bindings. The
+; language exports almost no names, so a variable read is an unbound identifier
+; and arrives at ps-top, which looks it up here.
+;
+; Only procedures create environments: a call gets a new one whose parent is the
+; environment the procedure was defined in. Blocks ({ } after IF, REPEAT and
+; FOR EACH) run in the surrounding environment.
+(struct Env (parent directory))
 
-  ; The identifier right after each HEAD node in stx, at any depth. Assignments
-  ; to list elements have a ps-list-ref there instead, so they are skipped.
-  (define (ids-after head stx)
-    (define parts (or (syntax->list stx) '()))
-    (append
-     (if (and (pair? parts) (pair? (cdr parts))
-              (identifier? (car parts)) (eq? (syntax-e (car parts)) head)
-              (identifier? (cadr parts)))
-         (list (cadr parts))
-         '())
-     (append-map (lambda (part) (ids-after head part)) parts)))
+(define (make-env [parent #f])
+  (Env parent (make-hasheq)))
 
-  ; Procedure names are excluded because ps-proc-def defines those itself.
-  (define (variables-to-define stmts)
-    (define proc-names (map syntax-e (ids-after 'ps-proc-def stmts)))
-    (remove-duplicates
-     (filter (lambda (id) (not (memq (syntax-e id) proc-names)))
-             (ids-after 'ps-assignment stmts))
-     #:key syntax-e)))
+(define current-env (make-parameter (make-env)))
+
+; The nearest environment, starting from environ, that has id; #f if none does.
+(define (find-env id environ)
+  (cond
+    [(not environ) #f]
+    [(hash-has-key? (Env-directory environ) id) environ]
+    [else (find-env id (Env-parent environ))]))
+
+(define (get id environ)
+  (define owner (find-env id environ))
+  (if owner
+      (hash-ref (Env-directory owner) id)
+      (error id "this variable doesn't have a value yet")))
+
+; Creates id in exactly this environment, shadowing any outer id.
+(define (create! id val environ)
+  (hash-set! (Env-directory environ) id val))
+
+; Updates id where it already exists, or creates it in environ if it doesn't.
+(define (assign! id val environ)
+  (create! id val (or (find-env id environ) environ)))
+
+(define-macro (ps-top . ID)
+  #'(get 'ID (current-env)))
 
 (define-macro (ps-module-begin (ps-program STMT ...))
-  (with-syntax ([(VAR ...) (variables-to-define #'(STMT ...))])
     #'(#%module-begin
-       (define VAR (void)) ...
-       STMT ...)))
+       STMT ...
+       ))
 
 (define-macro-cases ps-assignment
   [(ps-assignment (ps-list-ref ID NUM) EXPR) #'(gvector-set! ID (sub1 NUM) EXPR)]
   [(ps-assignment ID EXPR) #'(let ([expr-once EXPR])
-                               (if (gvector? expr-once)
-                                 (set! ID (vector->gvector (vector-copy (gvector->vector expr-once))))
-                                 (set! ID expr-once)))])
+                               (assign! 'ID
+                                        (if (gvector? expr-once)
+                                            (vector->gvector (vector-copy (gvector->vector expr-once)))
+                                            expr-once)
+                                        (current-env)))])
 
 
 (define (as-display-string expr)
@@ -77,16 +91,30 @@
       STMT ...))
 
 (define-macro (ps-for-each ID LIST STMT ...)
-  #'(for ([ID LIST])
-      STMT ...))      
+  #'(for ([item LIST])
+      (assign! 'ID item (current-env))
+      STMT ...))
 
+; ARG ... are fresh names, so that PARAM ... stay out of Racket's scope and reads
+; of them go through ps-top like any other variable.
 (define-macro (ps-proc-def NAME PARAM ... "{" STMT ...)
-  (with-syntax ([ps-return (datum->syntax caller-stx 'ps-return)])
-    #'(define (NAME PARAM ...)
-        (let/ec ps-return
-          STMT ... (void)))))
+  (with-syntax ([ps-return (datum->syntax caller-stx 'ps-return)]
+                [(ARG ...) (generate-temporaries #'(PARAM ...))])
+    #'(let ([defining-env (current-env)])
+        (create! 'NAME
+                 (procedure-rename
+                  (lambda (ARG ...)
+                    (parameterize ([current-env (make-env defining-env)])
+                      (create! 'PARAM ARG (current-env)) ...
+                      (let/ec ps-return
+                        STMT ... (void))))
+                  'NAME)
+                 defining-env))))
 
-      
+; Inside a procedure, ps-proc-def binds ps-return to an escape continuation.
+(define (ps-return value)
+  (error "RETURN can only be used inside a PROCEDURE"))
+
 (define-macro (ps-proc-call ID ARG ...)
   #'(ID ARG ...))
 
@@ -149,7 +177,7 @@
   
 (define (ps-neg expr)
   (if (not (number? expr))
-      (error ("negation requires a number, given ~a" expr))
+      (error (format "negation requires a number, given ~a" expr))
       (* -1 expr)))
 
 (define (ps-length expr)
@@ -169,4 +197,8 @@
   (string=? "true" b))
 
 (define (ps-dir)
-  (namespace-mapped-symbols))
+  (let visible-names ([environ (current-env)] [names '()])
+    (if environ
+        (visible-names (Env-parent environ)
+                       (append (hash-keys (Env-directory environ)) names))
+        (sort (remove-duplicates names) symbol<?))))
